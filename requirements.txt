@@ -1,0 +1,7 @@
+azure-functions
+fastapi
+uvicorn
+selenium
+beautifulsoup4
+webdriver_manager
+lxml
