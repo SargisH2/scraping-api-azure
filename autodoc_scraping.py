@@ -26,6 +26,23 @@ def find_in_autodoc(query, supplier = None):
     results_dict = get_urls(content)
     return results_dict
 
+def get_urls(content):
+    content = BeautifulSoup(content, 'html.parser')
+    hrefs = {}
+    for a_tag in content.select('a.listing-item__name'):
+        text_parts = []
+        
+        if a_tag.contents:
+            for child in a_tag.contents:
+                if child.name is None and child.strip():
+                    text_parts.append(child.strip())
+                elif child.name == 'span' and 'highlight' in child.get('class', []):
+                    text_parts.append(child.get_text(strip=True))
+        
+        if text_parts:
+            hrefs[' '.join(text_parts)] = a_tag['href']
+    
+    return hrefs
 
 def run_autodoc_page_scraper(url: str):
     driver = webdriver.Chrome(options=chrome_options)
@@ -121,7 +138,7 @@ def get_autodoc_json(content):
     # product section
     product_info = soup.select('section.section.wrap')[0] 
     return_obj = {
-        'autodoc_product_code': product_info.findChild('div')['data-article-id']
+        'website_product_code': product_info.findChild('div')['data-article-id']
     }
     
     # heading line
@@ -184,21 +201,3 @@ def get_autodoc_json(content):
     
     
     return return_obj
-
-def get_urls(content):
-    content = BeautifulSoup(content, 'html.parser')
-    hrefs = {}
-    for a_tag in content.select('a.listing-item__name'):
-        text_parts = []
-        
-        if a_tag.contents:
-            for child in a_tag.contents:
-                if child.name is None and child.strip():
-                    text_parts.append(child.strip())
-                elif child.name == 'span' and 'highlight' in child.get('class', []):
-                    text_parts.append(child.get_text(strip=True))
-        
-        if text_parts:
-            hrefs[' '.join(text_parts)] = a_tag['href']
-    
-    return hrefs
