@@ -110,6 +110,7 @@ def get_content(input: SearchQuery):
                 req_obj.query = url
                 req_obj.is_page = True
                 req_obj.depth = depth -1
+                req_obj.website = website
                 new_items = get_content(req_obj)
                 if new_items.get('content') == "No results found": continue
                 items_list.extend(new_items['items'])
