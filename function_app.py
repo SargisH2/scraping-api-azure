@@ -5,7 +5,7 @@ import create_response
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="find_parts/")
+@app.route()
 def find_parts(req: func.HttpRequest) -> func.HttpResponse:
     request_data = req.get_json()
     logging.info(request_data)
